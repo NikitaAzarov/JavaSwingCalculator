@@ -37,10 +37,10 @@ public class CalculatorGUI extends JFrame{
         buttonPanel.setLayout(new GridLayout(4, 5));
 
         String[] buttons = {
-                "7", "8", "9", "/", "DEL",
-                "4", "5", "6", "*", "AC",
-                "1", "2", "3", "-", "void",
-                "0", ".", "=", "+", "void"
+                "7", "8", "9", "/", "(",
+                "4", "5", "6", "*", ")",
+                "1", "2", "3", "-", "DEL",
+                "0", ".", "=", "+", "AC"
         };
 
         ActionListener buttonListener = new ActionListener() {
@@ -69,7 +69,23 @@ public class CalculatorGUI extends JFrame{
         this.add(buttonPanel, BorderLayout.CENTER);
     }
     private void onButtonPressed(String command) {
-        this.expressionStr = this.expressionStr.concat(command);
+        switch (command)
+        {
+            case "DEL":
+                if (!this.expressionStr.isEmpty())
+                {
+                    this.expressionStr = this.expressionStr.substring(0, this.expressionStr.length() - 1);
+                }
+                break;
+            case "AC":
+                if (!this.expressionStr.isEmpty())
+                {
+                    this.expressionStr = "";
+                }
+                break;
+            default:
+                this.expressionStr = this.expressionStr.concat(command);
+        }
         this.expression.setText(this.expressionStr);
     }
 
