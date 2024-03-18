@@ -1,8 +1,12 @@
 public class Token {
     public enum TokenType
     {
-        ADD,
-        MINUS
+        OPERAND,
+        OPERATOR,
+        DOT,
+        L_PARANTHESIS,
+        R_PARANTHESIS,
+        FUNCTION
     }
     private TokenType type;
     private String value;
