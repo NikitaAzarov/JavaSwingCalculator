@@ -3,10 +3,9 @@ public class Token {
     {
         OPERAND,
         OPERATOR,
-        DOT,
         L_PARANTHESIS,
         R_PARANTHESIS,
-        FUNCTION
+        FUNCTION,
     }
     private TokenType type;
     private String value;

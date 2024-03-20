@@ -84,11 +84,8 @@ public class Calculator extends JFrame{
                 tokenizer.tokenize();
                 System.out.println(tokenizer.toString());
                 return;
-            case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
+            case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".":
                 tokenizer.addToken(new Token(Token.TokenType.OPERAND, button));
-                break;
-            case ".":
-                tokenizer.addToken(new Token(Token.TokenType.DOT, button));
                 break;
             case "*", "/" , "+", "-", "x^y":
                 tokenizer.addToken(new Token(Token.TokenType.OPERATOR, button));
@@ -110,7 +107,6 @@ public class Calculator extends JFrame{
             default:
         }
         addExpression(button);
-
     }
     private void removeExpression(String button)
     {
@@ -130,7 +126,6 @@ public class Calculator extends JFrame{
             default:
         }
         this.expression.setText(this.expressionStr);
-
     }
     private void addExpression(String button)
     {

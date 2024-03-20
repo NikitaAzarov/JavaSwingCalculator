@@ -1,54 +1,69 @@
 import java.util.ArrayList;
 
 public class MyTokenizer {
+    private ArrayList<Token> preTokens;
     private ArrayList<Token> tokens;
     private String NumberBuffer = "";
-    public MyTokenizer()
-    {
+
+    public MyTokenizer() {
+        preTokens = new ArrayList<>();
         tokens = new ArrayList<>();
     }
-    public void addToken(Token token)
-    {
-        if (token.getType() == Token.TokenType.OPERAND || token.getType() == Token.TokenType.DOT)
-            this.NumberBuffer = this.NumberBuffer.concat(token.getValue());
-        else {
-            if (!this.NumberBuffer.isEmpty()) {
-                this.tokens.add(new Token(Token.TokenType.OPERAND, this.NumberBuffer));
-                NumberBuffer = "";
-            }
-            tokens.add(token);
-        }
-    }
-    public void removeLastToken()
-    {
-        tokens.remove(tokens.size() - 1);
+
+    public void addToken(Token token) {
+        preTokens.add(token);
     }
 
-    public void removeAllTokens()
-    {
-        tokens.clear();
+    public void removeLastToken() {
+        preTokens.remove(preTokens.size() - 1);
     }
-    public Token getLastToken()
-    {
-        return tokens.get(tokens.size() - 1);
+
+    public void removeAllTokens() {
+        preTokens.clear();
     }
-    public int LastTokenFunctionSize()
-    {
-        if (tokens.size() >=2 && tokens.get(tokens.size() - 2).getType() == Token.TokenType.FUNCTION)
-            return tokens.get(tokens.size() - 2).getValue().length();
+
+    public int LastTokenFunctionSize() {
+        if (preTokens.size() >= 2 && preTokens.get(preTokens.size() - 2).getType() == Token.TokenType.FUNCTION)
+            return preTokens.get(preTokens.size() - 2).getValue().length();
         return 0;
     }
-    public void tokenize()
-    {
-        if (!this.NumberBuffer.isEmpty()) {
-            this.tokens.add(new Token(Token.TokenType.OPERAND, this.NumberBuffer));
-            NumberBuffer = "";
+
+    public void tokenize() {
+        if (!this.tokens.isEmpty())
+            this.tokens.clear();
+        for (int i = 0; i < preTokens.size(); i++)
+        {
+            if (i == preTokens.size() - 1 && preTokens.get(i).getType() == Token.TokenType.OPERAND)
+            {
+                this.NumberBuffer = this.NumberBuffer.concat(preTokens.get(i).getValue());
+                tokens.add(new Token(Token.TokenType.OPERAND, this.NumberBuffer));
+                this.NumberBuffer = "";
+            }
+            else {
+                switch (preTokens.get(i).getType()) {
+                    case OPERAND:
+                        this.NumberBuffer = this.NumberBuffer.concat(preTokens.get(i).getValue());
+                        break;
+                    default:
+                        if (!this.NumberBuffer.isEmpty()) {
+                            tokens.add(new Token(Token.TokenType.OPERAND, this.NumberBuffer));
+                            this.NumberBuffer = "";
+                        }
+                        tokens.add(preTokens.get(i));
+                }
+            }
         }
     }
+
 
     @Override
     public String toString() {
         String strReturn = "";
+        strReturn = strReturn.concat("PreTokens:\n");
+        for (Token token : preTokens) {
+            strReturn += token.toString() + "\n";
+        }
+        strReturn = strReturn.concat("\nTokens:\n");
         for (Token token : tokens) {
             strReturn += token.toString() + "\n";
         }
