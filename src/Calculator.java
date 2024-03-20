@@ -113,8 +113,10 @@ public class Calculator extends JFrame{
         switch (button)
         {
             case "DEL":
-                if (tokenizer.LastTokenFunctionSize() != 0)
+                if (tokenizer.LastTokenFunctionSize() != 0) {
                     this.expressionStr = this.expressionStr.substring(0, this.expressionStr.length() - (tokenizer.LastTokenFunctionSize() + 1));
+                    tokenizer.removeLastToken();
+                }
                 else
                     this.expressionStr = this.expressionStr.substring(0, this.expressionStr.length() - 1);
                 tokenizer.removeLastToken();
