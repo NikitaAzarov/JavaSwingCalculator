@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Calculator extends JFrame{
 
     private String expressionStr = "";
-    private final String resultStr = "";
+    private String resultStr = "";
     private final MyTokenizer tokenizer;
     private final JTextField expression;
     private JTextField result;
@@ -18,6 +18,7 @@ public class Calculator extends JFrame{
     {
         this.setTitle("Calculator");
         this.setSize(300, 400);
+        this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         expression = new JTextField();
@@ -68,7 +69,7 @@ public class Calculator extends JFrame{
         textPanel.add(result);
 
         this.setLayout(new BorderLayout());
-        this.add(expression, BorderLayout.NORTH);
+        this.add(textPanel, BorderLayout.NORTH);
         this.add(buttonPanel, BorderLayout.CENTER);
 
         tokenizer = new MyTokenizer();
@@ -78,10 +79,16 @@ public class Calculator extends JFrame{
             if (!this.expressionStr.isEmpty())
                 removeExpression(button);
         } else if (button.equals("=")) {
-            ArrayList<Token> tokens = tokenizer.tokenize();
-            System.out.println(tokenizer.toString());
-            Calculate calc = new Calculate(tokens);
-            calc.printRPN();
+            try {
+                ArrayList<Token> tokens = tokenizer.tokenize();
+                System.out.println(tokenizer.toString());
+                Calculate calc = new Calculate(tokens);
+                calc.printRPN();
+                this.result.setText(String.valueOf(calc.count()));
+            }
+            catch (CalculatorException e) {
+                this.result.setText(e.getMessage());
+            }
         }
         else {
             switch (button) {
