@@ -5,8 +5,8 @@ public class Token {
     {
         OPERAND,
         OPERATOR,
-        L_PARANTHESIS,
-        R_PARANTHESIS,
+        L_PARENTHESIS,
+        R_PARENTHESIS,
         FUNCTION,
     }
     public enum OperatorAssociativityType
@@ -43,7 +43,7 @@ public class Token {
         return this.value;
     }
 
-    public int getPrecendance() {
+    public int getPrecedence() {
         HashMap<String, Integer> operator_leftAssociative = new HashMap<>();
         operator_leftAssociative.put("+", 2);
         operator_leftAssociative.put("-", 2);

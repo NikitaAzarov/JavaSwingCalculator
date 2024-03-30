@@ -15,11 +15,11 @@ public class Calculate {
         for (Token token : this.infixTokens) {
             switch (token.getType()) {
                 case OPERAND -> postfixTokens.add(token);
-                case L_PARANTHESIS, FUNCTION -> stack.push(token);
+                case L_PARENTHESIS, FUNCTION -> stack.push(token);
                 case OPERATOR -> {
                     if (!stack.empty()) {
-                        while (stack.peek().getType() == Token.TokenType.OPERATOR && ((stack.peek().getPrecendance() > token.getPrecendance())
-                                || (stack.peek().getPrecendance() == token.getPrecendance() && token.getAssociativity() == Token.OperatorAssociativityType.LEFT))) {
+                        while (stack.peek().getType() == Token.TokenType.OPERATOR && ((stack.peek().getPrecedence() > token.getPrecedence())
+                                || (stack.peek().getPrecedence() == token.getPrecedence() && token.getAssociativity() == Token.OperatorAssociativityType.LEFT))) {
                             fromStackToQueue(stack);
                             if (stack.empty())
                                 break;
@@ -27,13 +27,13 @@ public class Calculate {
                     }
                     stack.push(token);
                 }
-                case R_PARANTHESIS -> {
+                case R_PARENTHESIS -> {
                     if (stack.empty())
-                        throw new CalculatorException("Non-balanced on paranthesis expression!", CalculatorException.ErrorType.Syntax);
-                    while (stack.peek().getType() != Token.TokenType.L_PARANTHESIS) {
+                        throw new CalculatorException("Non-balanced on parenthesis expression!", CalculatorException.ErrorType.Syntax);
+                    while (stack.peek().getType() != Token.TokenType.L_PARENTHESIS) {
                         fromStackToQueue(stack);
                         if (stack.empty())
-                            throw new CalculatorException("Non-balanced on paranthesis expression!", CalculatorException.ErrorType.Syntax);
+                            throw new CalculatorException("Non-balanced on parenthesis expression!", CalculatorException.ErrorType.Syntax);
                     }
                     stack.pop();
                     if (!stack.empty() && stack.peek().getType() == Token.TokenType.FUNCTION)
@@ -43,8 +43,8 @@ public class Calculate {
         }
         while(!stack.empty())
         {
-            if(stack.peek().getType() == Token.TokenType.L_PARANTHESIS)
-                throw new CalculatorException("Paranthesis-unbalanced expression!", CalculatorException.ErrorType.Syntax);
+            if(stack.peek().getType() == Token.TokenType.L_PARENTHESIS)
+                throw new CalculatorException("Parenthesis-unbalanced expression!", CalculatorException.ErrorType.Syntax);
             else
                 fromStackToQueue(stack);
         }
@@ -73,14 +73,13 @@ public class Calculate {
 
     public double count() throws CalculatorException {
         if (!infixTokens.isEmpty()) {
-            Stack<Double> stack = new Stack<Double>();
-            double result = 0;
+            Stack<Double> stack = new Stack<>();
+            double result;
             for (Token token : postfixTokens) {
                 String tokenValue = token.getValue();
                 switch (token.getType()) {
-                    case OPERAND -> {
+                    case OPERAND ->
                         stack.push(Double.parseDouble(tokenValue));
-                    }
                     case OPERATOR -> {
                         switch (token.getAssociativity()) {
                             case LEFT -> {
@@ -103,15 +102,15 @@ public class Calculate {
                                     throw new CalculatorException("Unknown {" + tokenValue + "} operator!", CalculatorException.ErrorType.Syntax);
                                 stack.push(result);
                             }
-                            case NONE -> {
+                            case NONE ->
                                 throw new CalculatorException("Operator must have associativity!", CalculatorException.ErrorType.Logic);
-                            }
                         }
                     }
                     case FUNCTION -> {
+                        double numberA;
                         switch (tokenValue) {
                             case "sqrt":
-                                double numberA = getNumberFromStack(stack);
+                                numberA = getNumberFromStack(stack);
                                 result = Math.sqrt(numberA);
                                 break;
                             case "sin":

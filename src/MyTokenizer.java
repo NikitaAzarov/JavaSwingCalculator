@@ -52,16 +52,16 @@ public class MyTokenizer {
                         clearAndTokenizeBuffer();
                         if (i == 0)
                             tokens.add(new Token(Token.TokenType.OPERATOR, Token.OperatorAssociativityType.RIGHT, preTokens.get(i).getValue()));
-                        else if (preTokens.get(i - 1).getType() == Token.TokenType.L_PARANTHESIS || preTokens.get(i - 1).getType() == Token.TokenType.OPERATOR)
+                        else if (preTokens.get(i - 1).getType() == Token.TokenType.L_PARENTHESIS || preTokens.get(i - 1).getType() == Token.TokenType.OPERATOR)
                             tokens.add(new Token(Token.TokenType.OPERATOR, Token.OperatorAssociativityType.RIGHT, preTokens.get(i).getValue()));
                         else
                             tokens.add(new Token(Token.TokenType.OPERATOR, Token.OperatorAssociativityType.LEFT, preTokens.get(i).getValue()));
                     }
-                    case L_PARANTHESIS -> {
+                    case L_PARENTHESIS -> {
                         clearAndTokenizeBuffer();
                         if (i != 0 && (preTokens.get(i-1).getType() != Token.TokenType.OPERATOR) && (preTokens.get(i-1).getType() != Token.TokenType.FUNCTION))
                             tokens.add(new Token(Token.TokenType.OPERATOR, Token.OperatorAssociativityType.LEFT, "*"));
-                        tokens.add(new Token(Token.TokenType.L_PARANTHESIS, "("));
+                        tokens.add(new Token(Token.TokenType.L_PARENTHESIS, "("));
                     }
                     default -> {
                         clearAndTokenizeBuffer();

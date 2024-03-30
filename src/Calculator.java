@@ -12,8 +12,6 @@ public class Calculator extends JFrame{
     private Calculate calc;
     private final JTextField expression;
     private JTextField result;
-    private JPanel buttonPanel;
-    private JPanel textPanel;
 
     public Calculator()
     {
@@ -32,12 +30,12 @@ public class Calculator extends JFrame{
         result.setPreferredSize(new Dimension(300, 50));
         result.setHorizontalAlignment(JTextField.CENTER);
 
-        textPanel = new JPanel();
+        JPanel textPanel = new JPanel();
         textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
         result.setMaximumSize(new Dimension(Integer.MAX_VALUE, result.getPreferredSize().height));
         expression.setMaximumSize(new Dimension(Integer.MAX_VALUE, expression.getPreferredSize().height));
 
-        buttonPanel = new JPanel();
+        JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(5, 5));
 
         String[] buttons = {
@@ -138,14 +136,14 @@ public class Calculator extends JFrame{
                 case "*", "/", "+", "-", "x^y" -> tokenizer.addToken(new Token(Token.TokenType.OPERATOR, button));
                 case "sin", "cos", "sqrt", "tan" -> {
                     tokenizer.addToken(new Token(Token.TokenType.FUNCTION, button));
-                    tokenizer.addToken(new Token(Token.TokenType.L_PARANTHESIS, "("));
+                    tokenizer.addToken(new Token(Token.TokenType.L_PARENTHESIS, "("));
                 }
                 case "x^2" -> {
                     tokenizer.addToken(new Token(Token.TokenType.OPERATOR, "^"));
                     tokenizer.addToken(new Token(Token.TokenType.OPERAND, "2"));
                 }
-                case "(" -> tokenizer.addToken(new Token(Token.TokenType.L_PARANTHESIS, button));
-                case ")" -> tokenizer.addToken(new Token(Token.TokenType.R_PARANTHESIS, button));
+                case "(" -> tokenizer.addToken(new Token(Token.TokenType.L_PARENTHESIS, button));
+                case ")" -> tokenizer.addToken(new Token(Token.TokenType.R_PARENTHESIS, button));
                 default -> {
                 }
             }
