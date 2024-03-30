@@ -1,5 +1,4 @@
 import java.util.HashMap;
-import java.util.Map;
 
 public class Token {
     public enum TokenType
@@ -15,10 +14,10 @@ public class Token {
         NONE,
         RIGHT,
         LEFT
-    };
-    private TokenType type;
-    private OperatorAssociativityType associativityType;
-    private String value;
+    }
+    final TokenType type;
+    final OperatorAssociativityType associativityType;
+    final String value;
 
     public Token(TokenType type, String value) {
         this.type = type;
@@ -59,14 +58,14 @@ public class Token {
             case LEFT -> {
                 if (operator_leftAssociative.containsKey(this.value))
                     return operator_leftAssociative.get(this.value);
-                else throw new Error("Unknown Operator!");
+                else throw new CalculatorException(CalculatorException.ErrorType.Syntax);
             }
             case RIGHT -> {
                 if (operator_rightAssociative.containsKey(this.value))
                     return operator_rightAssociative.get(this.value);
-                else throw new Error("Unknown Operator!");
+                else throw new CalculatorException(CalculatorException.ErrorType.Syntax);
             }
-            case NONE -> throw new Error("Unknown Operator!");
+            case NONE -> throw new CalculatorException(CalculatorException.ErrorType.Syntax);
         }
         return -1;
     }

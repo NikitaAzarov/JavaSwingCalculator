@@ -9,6 +9,7 @@ public class Calculator extends JFrame{
     private String expressionStr = "";
     private String resultStr = "";
     private final MyTokenizer tokenizer;
+    private Calculate calc;
     private final JTextField expression;
     private JTextField result;
     private JPanel buttonPanel;
@@ -74,43 +75,6 @@ public class Calculator extends JFrame{
 
         tokenizer = new MyTokenizer();
     }
-    private void onButtonPressed(String button) {
-        if (button.equals("AC") || button.equals("DEL")) {
-            if (!this.expressionStr.isEmpty())
-                removeExpression(button);
-        } else if (button.equals("=")) {
-            try {
-                ArrayList<Token> tokens = tokenizer.tokenize();
-                System.out.println(tokenizer.toString());
-                Calculate calc = new Calculate(tokens);
-                calc.printRPN();
-                this.result.setText(String.valueOf(calc.count()));
-            }
-            catch (CalculatorException e) {
-                this.result.setText(e.getMessage());
-            }
-        }
-        else {
-            switch (button) {
-                case ".", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ->
-                        tokenizer.addToken(new Token(Token.TokenType.OPERAND, button));
-                case "*", "/", "+", "-", "x^y" -> tokenizer.addToken(new Token(Token.TokenType.OPERATOR, button));
-                case "sin", "cos", "sqrt" -> {
-                    tokenizer.addToken(new Token(Token.TokenType.FUNCTION, button));
-                    tokenizer.addToken(new Token(Token.TokenType.L_PARANTHESIS, "("));
-                }
-                case "x^2" -> {
-                    tokenizer.addToken(new Token(Token.TokenType.OPERATOR, "^"));
-                    tokenizer.addToken(new Token(Token.TokenType.OPERAND, "2"));
-                }
-                case "(" -> tokenizer.addToken(new Token(Token.TokenType.L_PARANTHESIS, button));
-                case ")" -> tokenizer.addToken(new Token(Token.TokenType.R_PARANTHESIS, button));
-                default -> {
-                }
-            }
-        addExpression(button);
-        }
-    }
     private void removeExpression(String button)
     {
         switch (button) {
@@ -134,11 +98,59 @@ public class Calculator extends JFrame{
     private void addExpression(String button)
     {
         switch (button) {
-            case "sin", "cos", "sqrt" -> this.expressionStr = this.expressionStr.concat(button + "(");
+            case "sin", "cos", "sqrt", "tan" -> this.expressionStr = this.expressionStr.concat(button + "(");
             case "x^2" -> this.expressionStr = this.expressionStr.concat("^2");
             default -> this.expressionStr = this.expressionStr.concat(button);
         }
         this.expression.setText(this.expressionStr);
+    }
+    private void debug()
+    {
+        if (calc != null)
+        {
+            System.out.println(tokenizer.toString());
+            System.out.println("Infix: " + calc.getInfix());
+            System.out.println("Postfix: " + calc.getPostfix());
+            System.out.println("Result: " + resultStr);
+        }
+    }
+
+    private void onButtonPressed(String button) {
+        if (button.equals("AC") || button.equals("DEL")) {
+            if (!this.expressionStr.isEmpty())
+                removeExpression(button);
+        } else if (button.equals("=")) {
+            try {
+                ArrayList<Token> tokens = tokenizer.tokenize();
+                calc = new Calculate(tokens);
+                resultStr = String.valueOf(calc.count());
+            }
+            catch (CalculatorException e) {
+                resultStr = e.getMessage();
+            }
+            this.result.setText(resultStr);
+            debug();
+        }
+        else {
+            switch (button) {
+                case ".", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ->
+                        tokenizer.addToken(new Token(Token.TokenType.OPERAND, button));
+                case "*", "/", "+", "-", "x^y" -> tokenizer.addToken(new Token(Token.TokenType.OPERATOR, button));
+                case "sin", "cos", "sqrt", "tan" -> {
+                    tokenizer.addToken(new Token(Token.TokenType.FUNCTION, button));
+                    tokenizer.addToken(new Token(Token.TokenType.L_PARANTHESIS, "("));
+                }
+                case "x^2" -> {
+                    tokenizer.addToken(new Token(Token.TokenType.OPERATOR, "^"));
+                    tokenizer.addToken(new Token(Token.TokenType.OPERAND, "2"));
+                }
+                case "(" -> tokenizer.addToken(new Token(Token.TokenType.L_PARANTHESIS, button));
+                case ")" -> tokenizer.addToken(new Token(Token.TokenType.R_PARANTHESIS, button));
+                default -> {
+                }
+            }
+        addExpression(button);
+        }
     }
 
 }
